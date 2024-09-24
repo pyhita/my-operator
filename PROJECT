@@ -17,4 +17,13 @@ resources:
   kind: MyKind
   path: github.com/pyhita/my-operator/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: pyhita.com
+  group: mygroup
+  kind: ConfigMapSync
+  path: github.com/pyhita/my-operator/api/v1
+  version: v1
 version: "3"

@@ -35,6 +35,7 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
+	mygroupv1 "github.com/pyhita/my-operator/api/v1"
 	mygroupv1alpha1 "github.com/pyhita/my-operator/api/v1alpha1"
 	"github.com/pyhita/my-operator/internal/controller"
 	// +kubebuilder:scaffold:imports
@@ -49,6 +50,7 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(mygroupv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(mygroupv1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -149,6 +151,13 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "MyKind")
+		os.Exit(1)
+	}
+	if err = (&controller.ConfigMapSyncReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "ConfigMapSync")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder
